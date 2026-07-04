@@ -28,14 +28,13 @@ describe('Checkout', () => {
         await browser.url('/auth/login')
 
         const emailObj = await $('[data-test="email"]')
+        await emailObj.waitForDisplayed({ timeout: 5000 })
         await emailObj.click()
-        await emailObj.setValue('testuser3@epam.com')
-        await browser.keys('Tab')
+        await emailObj.addValue('testuser3@epam.com')
 
         const passwordObj = await $('[data-test="password"]')
         await passwordObj.click()
-        await passwordObj.setValue('T3st12345@')
-        await browser.keys('Tab')
+        await passwordObj.addValue('T3st12345@')
 
         const loginBtn = await $('[data-test="login-submit"]')
         await loginBtn.click()

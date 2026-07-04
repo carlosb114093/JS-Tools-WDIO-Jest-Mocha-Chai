@@ -8,22 +8,12 @@ describe('User Profile', () => {
 
         const emailObj = await $('[data-test="email"]')
         await emailObj.waitForDisplayed({ timeout: 5000 })
-        await browser.execute((el, val) => {
-            const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
-            nativeSetter.call(el, val)
-            el.dispatchEvent(new Event('input', { bubbles: true }))
-            el.dispatchEvent(new Event('change', { bubbles: true }))
-            el.dispatchEvent(new Event('blur', { bubbles: true }))
-        }, emailObj, 'testuser3@epam.com')
+        await emailObj.click()
+        await emailObj.addValue('testuser3@epam.com')
 
         const passwordObj = await $('[data-test="password"]')
-        await browser.execute((el, val) => {
-            const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
-            nativeSetter.call(el, val)
-            el.dispatchEvent(new Event('input', { bubbles: true }))
-            el.dispatchEvent(new Event('change', { bubbles: true }))
-            el.dispatchEvent(new Event('blur', { bubbles: true }))
-        }, passwordObj, 'T3st12345@')
+        await passwordObj.click()
+        await passwordObj.addValue('T3st12345@')
 
         const loginBtn = await $('[data-test="login-submit"]')
         await loginBtn.click()

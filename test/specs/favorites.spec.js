@@ -7,10 +7,13 @@ describe('Favorites', () => {
         await browser.url('/auth/login')
 
         const emailObj = await $('[data-test="email"]')
-        await emailObj.setValue('testuser3@epam.com')
+        await emailObj.waitForDisplayed({ timeout: 5000 })
+        await emailObj.click()
+        await emailObj.addValue('testuser3@epam.com')
 
         const passwordObj = await $('[data-test="password"]')
-        await passwordObj.setValue('T3st12345@')
+        await passwordObj.click()
+        await passwordObj.addValue('T3st12345@')
 
         const loginBtn = await $('[data-test="login-submit"]')
         await loginBtn.click()
