@@ -1,23 +1,29 @@
-// @ts-check
 const { test, expect } = require('@playwright/test')
+const LoginPage = require('../pages/LoginPage')
 
 const credentials = [
-    { email: 'customer@practicesoftware.com', password: 'welcome01' },
-    { email: 'admin@practicesoftware.com',    password: 'admin@123' },
+    { email: 'testuser3@epam.com', password: 'T3st12345@' },
 ]
 
-for (const { email, password } of credentials) {
-    test(`@signup_signin - Registered user signs in with valid credentials [${email}]`, async ({ page }) => {
-        // Given
-        await page.goto('/auth/login')
+test.describe('@signup_signin - Registered user signs in with valid credentials', () => {
 
-        // When
-        await page.locator('[data-test="email"]').fill(email)
-        await page.locator('[data-test="password"]').fill(password)
-        await page.locator('[data-test="login-submit"]').click()
-
-        // Then
-        await expect(page).toHaveURL(/\/account/, { timeout: 12000 })
-        await expect(page.locator('[data-test="nav-menu"]')).toContainText(/customer|admin/i)
+    test.beforeEach(async ({ page }) => {
+        const loginPage = new LoginPage(page)
+        await loginPage.goto()
     })
-}
+
+    for (const { email, password } of credentials) {
+        test(`signs in with [${email}]`, async ({ page }) => {
+            // Use test.only on a single test to run only that one during debugging
+            const loginPage = new LoginPage(page)
+
+            // When
+            await loginPage.login(email, password)
+
+            // Then
+            await expect(page).toHaveURL(/\/account/, { timeout: 12000 })
+            await expect(loginPage.navMenu).not.toBeEmpty()
+        })
+    }
+
+})

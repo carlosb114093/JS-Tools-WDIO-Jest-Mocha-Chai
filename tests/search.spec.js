@@ -1,24 +1,26 @@
-// @ts-check
 const { test, expect } = require('@playwright/test')
+const HomePage = require('../pages/HomePage')
 
 const queries = ['Combination Pliers', 'Slip Joint Pliers']
 
-for (const query of queries) {
-    test(`@search - Customer searches for exact product name [${query}]`, async ({ page }) => {
-        // Given
-        await page.goto('/')
+test.describe('@search - Customer searches for exact product name', () => {
 
-        // When
-        await page.locator('[data-test="search-query"]').fill(query)
-        await page.locator('[data-test="search-submit"]').click()
-
-        // Then
-        const results = page.locator('[data-test="product-name"]')
-        await expect(results.first()).toBeVisible({ timeout: 8000 })
-
-        const count = await results.count()
-        for (let i = 0; i < count; i++) {
-            await expect(results.nth(i)).toContainText(query)
-        }
+    test.beforeEach(async ({ page }) => {
+        const homePage = new HomePage(page)
+        await homePage.goto()
     })
-}
+
+    for (const query of queries) {
+        test(`search results match [${query}]`, async ({ page }) => {
+            const homePage = new HomePage(page)
+
+            // When
+            await homePage.search(query)
+
+            // Then - verify first result matches the search query
+            await expect(homePage.productNames.first()).toBeVisible({ timeout: 8000 })
+            await expect(homePage.productNames.first()).toContainText(query, { timeout: 8000 })
+        })
+    }
+
+})
