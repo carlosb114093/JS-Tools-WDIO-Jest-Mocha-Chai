@@ -45,14 +45,19 @@ npm install
 ## Run tests
 
 ### Run all tests
-```bash
+```powershell
 npx wdio run wdio.conf.js
 ```
 
 ### Run a single spec
-```bash
+```powershell
 npx wdio run wdio.conf.js --spec test/specs/search.spec.js
 ```
+
+> On Windows PowerShell use `;` to chain commands instead of `&&`:
+> ```powershell
+> cd mi-proyecto-wdio; npx wdio run wdio.conf.js
+> ```
 
 ## Project structure
 
