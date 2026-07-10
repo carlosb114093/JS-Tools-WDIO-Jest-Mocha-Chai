@@ -6,7 +6,7 @@ describe('User Profile', () => {
 
     beforeEach(async () => {
         const email = `test_${Date.now()}@test.com`
-        const password = 'Test12345!'
+        const password = 'Xk9#mQ2$vL7pZw'
         await registerAndLogin(email, password)
         await browser.url('/account/profile')
     })

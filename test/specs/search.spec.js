@@ -6,15 +6,11 @@ describe('Search bar', () => {
         // 1. Given
         await browser.url('/')
 
-        // 2. When — use native events so Angular detects the input
+        // 2. When
         const searchObj = await $('[data-test="search-query"]')
         await searchObj.waitForDisplayed({ timeout: 5000 })
-        await browser.execute((el, val) => {
-            const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
-            nativeSetter.call(el, val)
-            el.dispatchEvent(new Event('input', { bubbles: true }))
-            el.dispatchEvent(new Event('change', { bubbles: true }))
-        }, searchObj, 'Hammer')
+        await searchObj.click()
+        await searchObj.addValue('Hammer')
 
         const searchButn = await $('[data-test="search-submit"]')
         await searchButn.click()

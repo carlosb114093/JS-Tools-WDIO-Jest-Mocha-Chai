@@ -7,7 +7,7 @@ describe('Login', () => {
 
     beforeEach(async () => {
         testEmail = `test_${Date.now()}@test.com`
-        testPassword = 'Test12345!'
+        testPassword = 'Xk9#mQ2$vL7pZw'
         await registerUser(testEmail, testPassword)
         await browser.url('/auth/login')
     })
@@ -38,6 +38,7 @@ describe('Login', () => {
         assert.include(url, '/account', 'It did not redirect to the account page')
 
         const navMenu = await $('[data-test="nav-menu"]')
+        await navMenu.waitForExist({ timeout: 8000 })
         const navText = await navMenu.getText()
         assert.include(navText.toLowerCase(), 'test', 'Username does not appear in nav menu')
     })

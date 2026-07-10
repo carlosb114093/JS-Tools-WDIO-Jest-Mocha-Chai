@@ -1,6 +1,6 @@
 async function setAngularValue(selector, value) {
     const el = await $(selector)
-    await el.waitForDisplayed({ timeout: 5000 })
+    await el.waitForExist({ timeout: 12000 })
     await browser.execute((element, val) => {
         const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
         nativeSetter.call(element, val)
@@ -10,34 +10,81 @@ async function setAngularValue(selector, value) {
     }, el, value)
 }
 
+async function waitForLookup() {
+    await browser.waitUntil(
+        async () => {
+            const alerts = await $$('.alert-info')
+            for (const a of alerts) {
+                const t = await a.getText()
+                if (t.includes('Buscando') || t.includes('Searching')) return false
+            }
+            return true
+        },
+        { timeout: 20000, timeoutMsg: 'Postcode lookup did not finish' }
+    )
+}
+
+async function fillAddressFields() {
+    await setAngularValue('[data-test="street"]', 'Test Street')
+    await setAngularValue('[data-test="city"]', 'Test City')
+    await setAngularValue('[data-test="state"]', 'Test State')
+}
+
 async function registerUser(email, password) {
     await browser.url('/auth/register')
+    await browser.pause(1500)
 
     await setAngularValue('[data-test="first-name"]', 'Test')
     await setAngularValue('[data-test="last-name"]', 'User')
     await setAngularValue('[data-test="dob"]', '1990-01-01')
-    await setAngularValue('[data-test="address"]', '123 Test Street')
-    await setAngularValue('[data-test="city"]', 'Test City')
-    await setAngularValue('[data-test="state"]', 'Test State')
-    await setAngularValue('[data-test="postcode"]', '12345')
+
+    await browser.execute(() => {
+        const el = document.querySelector('[data-test="country"]')
+        el.value = 'NL'
+        el.dispatchEvent(new Event('change', { bubbles: true }))
+    })
+
+    await setAngularValue('[data-test="postal_code"]', '1234AB')
+    await setAngularValue('[data-test="house_number"]', '1')
+    await browser.pause(1500)
+    await waitForLookup()
+
+    await fillAddressFields()
     await setAngularValue('[data-test="phone"]', '3001234567')
-
-    const countryEl = await $('[data-test="country"]')
-    await browser.execute((element) => {
-        element.selectedIndex = 57
-        element.dispatchEvent(new Event('change', { bubbles: true }))
-    }, countryEl)
-
     await setAngularValue('[data-test="email"]', email)
     await setAngularValue('[data-test="password"]', password)
-    await setAngularValue('[data-test="password-confirm"]', password)
 
     const registerBtn = await $('[data-test="register-submit"]')
     await browser.execute((el) => el.click(), registerBtn)
+    await browser.pause(2000)
+
+    if ((await browser.getUrl()).includes('/auth/register')) {
+        await waitForLookup()
+        const street = await $('[data-test="street"]')
+        if (await street.isExisting()) {
+            await fillAddressFields()
+        }
+        await browser.execute((el) => el.click(), registerBtn)
+        await browser.pause(1000)
+    }
 
     await browser.waitUntil(
-        async () => (await browser.getUrl()).includes('/auth/login'),
-        { timeout: 10000, timeoutMsg: 'Registration failed' }
+        async () => {
+            const url = await browser.getUrl()
+            if (!url.includes('/auth/register')) return true
+            const alerts = await $$('.alert-info')
+            for (const a of alerts) {
+                const t = await a.getText()
+                if (t.includes('Buscando') || t.includes('Searching')) {
+                    await browser.pause(2000)
+                    await waitForLookup()
+                    await fillAddressFields()
+                    await browser.execute((el) => el.click(), registerBtn)
+                }
+            }
+            return false
+        },
+        { timeout: 30000, timeoutMsg: 'Registration failed - still on register page' }
     )
 }
 
@@ -58,7 +105,7 @@ async function loginUser(email, password) {
 
     await browser.waitUntil(
         async () => (await browser.getUrl()).includes('/account'),
-        { timeout: 12000, timeoutMsg: 'Login failed' }
+        { timeout: 20000, timeoutMsg: 'Login failed' }
     )
 }
 

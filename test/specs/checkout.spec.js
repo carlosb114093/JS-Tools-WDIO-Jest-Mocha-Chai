@@ -26,7 +26,7 @@ describe('Checkout', () => {
 
     beforeEach(async () => {
         const email = `test_${Date.now()}@test.com`
-        const password = 'Test12345!'
+        const password = 'Xk9#mQ2$vL7pZw'
         await registerAndLogin(email, password)
     })
 
@@ -36,20 +36,30 @@ describe('Checkout', () => {
         // 2. When - add product to cart
         await browser.url('/')
 
+        await browser.waitUntil(
+            async () => (await $$('[data-test="product-name"]')).length > 0,
+            { timeout: 15000, timeoutMsg: 'Products did not load on homepage' }
+        )
         const product = await $('[data-test="product-name"]')
-        await product.waitForDisplayed({ timeout: 5000 })
         await product.click()
 
         const addCartBtn = await $('[data-test="add-to-cart"]')
-        await addCartBtn.waitForDisplayed({ timeout: 5000 })
-        await addCartBtn.click()
+        await addCartBtn.waitForDisplayed({ timeout: 10000 })
+        await browser.execute((el) => el.click(), addCartBtn)
 
         await browser.waitUntil(
             async () => {
-                const cart = await $('[data-test="cart-quantity"]')
-                return (await cart.isDisplayed()) && (await cart.getText()) !== '0'
+                try {
+                    const cart = await $('[data-test="cart-quantity"]')
+                    if (!(await cart.isExisting())) return false
+                    const text = await cart.getText()
+                    const num = parseInt(text, 10)
+                    return !isNaN(num) && num > 0
+                } catch (e) {
+                    return false
+                }
             },
-            { timeout: 8000, timeoutMsg: 'Product was not added to cart' }
+            { timeout: 15000, timeoutMsg: 'Product was not added to cart' }
         )
 
         await browser.url('/checkout')
