@@ -10,11 +10,16 @@ describe('Cart', () => {
         await product.waitForDisplayed({ timeout: 5000 })
         await product.click()
 
-        // 2. When
+        // 2. When - set quantity using native events for Angular
         const quantityObj = await $('[data-test="quantity"]')
         await quantityObj.waitForDisplayed({ timeout: 5000 })
-        await quantityObj.clearValue()
-        await quantityObj.setValue('2')
+        await browser.execute((element, val) => {
+            const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
+            nativeSetter.call(element, val)
+            element.dispatchEvent(new Event('input', { bubbles: true }))
+            element.dispatchEvent(new Event('change', { bubbles: true }))
+            element.dispatchEvent(new Event('blur', { bubbles: true }))
+        }, quantityObj, '2')
 
         const addToCartBtn = await $('[data-test="add-to-cart"]')
         await addToCartBtn.click()

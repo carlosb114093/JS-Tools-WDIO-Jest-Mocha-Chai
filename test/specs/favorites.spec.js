@@ -1,29 +1,17 @@
 const assert = require('chai').assert
+const { registerAndLogin } = require('../helpers/auth')
 
 describe('Favorites', () => {
 
-    it('@favorites - customer logged marks a product as favorite', async () => {
-        // 1. Given
-        await browser.url('/auth/login')
-
-        const emailObj = await $('[data-test="email"]')
-        await emailObj.waitForDisplayed({ timeout: 5000 })
-        await emailObj.click()
-        await emailObj.addValue('testuser3@epam.com')
-
-        const passwordObj = await $('[data-test="password"]')
-        await passwordObj.click()
-        await passwordObj.addValue('T3st12345@')
-
-        const loginBtn = await $('[data-test="login-submit"]')
-        await loginBtn.click()
-
-        await browser.waitUntil(
-            async () => (await browser.getUrl()).includes('/account'),
-            { timeout: 10000, timeoutMsg: 'Login failed' }
-        )
-
+    beforeEach(async () => {
+        const email = `test_${Date.now()}@test.com`
+        const password = 'Test12345!'
+        await registerAndLogin(email, password)
         await browser.url('/')
+    })
+
+    it('@favorites - customer logged marks a product as favorite', async () => {
+        // 1. Given - user registered and logged in via beforeEach
 
         const product = await $('[data-test="product-name"]')
         await product.waitForDisplayed({ timeout: 5000 })

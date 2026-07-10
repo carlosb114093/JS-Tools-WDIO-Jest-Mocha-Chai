@@ -36,20 +36,6 @@ Automated E2E test suite for [Practice Software Testing (Toolshop)](https://prac
 - Node.js >= 18
 - Google Chrome (latest)
 
-### Test user setup
-
-Several tests (login, favorites, checkout) require an authenticated user. Follow these steps before running the suite:
-
-1. Go to [https://practicesoftwaretesting.com/auth/register](https://practicesoftwaretesting.com/auth/register)
-2. Create an account with these exact credentials:
-   - **Email:** `testuser3@epam.com`
-   - **Password:** `T3st12345@`
-3. After registering, log in and go to **Account → Profile**
-4. Fill in all profile fields (required for the checkout test):
-   - First name, Last name, Phone, Street, City, State, Country
-
-> If you prefer to use a different email, update the credentials in every spec file that uses login: `favorites.spec.js`, `login.spec.js`, `checkout.spec.js`.
-
 ### Install dependencies
 
 ```bash
@@ -73,6 +59,8 @@ npx wdio run wdio.conf.js --spec test/specs/search.spec.js
 ```
 mi-proyecto-wdio/
 ├── test/
+│   ├── helpers/
+│   │   └── auth.js          # register + login helpers
 │   └── specs/
 │       ├── search.spec.js
 │       ├── login.spec.js
@@ -86,3 +74,5 @@ mi-proyecto-wdio/
 ├── package.json
 └── README.md
 ```
+
+> Tests that require authentication (`login`, `favorites`, `checkout`, `user-profile`) automatically register a temporary user with a unique email before each test. No manual account creation is needed.

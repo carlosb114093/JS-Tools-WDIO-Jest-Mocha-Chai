@@ -1,4 +1,5 @@
 const assert = require('chai').assert
+const { registerAndLogin } = require('../helpers/auth')
 
 async function setAngularValue(selector, value) {
     const el = await $(selector)
@@ -23,28 +24,16 @@ async function setAngularSelect(selector, index) {
 
 describe('Checkout', () => {
 
+    beforeEach(async () => {
+        const email = `test_${Date.now()}@test.com`
+        const password = 'Test12345!'
+        await registerAndLogin(email, password)
+    })
+
     it('@checkout - Customer completes a purchase successfully', async () => {
-        // 1. Given
-        await browser.url('/auth/login')
+        // 1. Given - user registered and logged in via beforeEach
 
-        const emailObj = await $('[data-test="email"]')
-        await emailObj.waitForDisplayed({ timeout: 5000 })
-        await emailObj.click()
-        await emailObj.addValue('testuser3@epam.com')
-
-        const passwordObj = await $('[data-test="password"]')
-        await passwordObj.click()
-        await passwordObj.addValue('T3st12345@')
-
-        const loginBtn = await $('[data-test="login-submit"]')
-        await loginBtn.click()
-
-        await browser.waitUntil(
-            async () => (await browser.getUrl()).includes('/account'),
-            { timeout: 12000, timeoutMsg: 'Login failed' }
-        )
-
-        // 2. When
+        // 2. When - add product to cart
         await browser.url('/')
 
         const product = await $('[data-test="product-name"]')
@@ -86,7 +75,7 @@ describe('Checkout', () => {
 
         await setAngularSelect('[data-test="payment-method"]', 1)
         await setAngularValue('[data-test="bank_name"]', 'Bancolombia')
-        await setAngularValue('[data-test="account_name"]', 'test3 test')
+        await setAngularValue('[data-test="account_name"]', 'Test User')
         await setAngularValue('[data-test="account_number"]', '1234567890')
 
         const confirmBtn = await $('[data-test="finish"]')

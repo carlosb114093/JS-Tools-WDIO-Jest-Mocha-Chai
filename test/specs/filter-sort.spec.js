@@ -14,7 +14,7 @@ describe('Filter and Sort', () => {
 
         const sortDropdown = await $('[data-test="sort"]')
         await sortDropdown.waitForDisplayed({ timeout: 5000 })
-        await sortDropdown.selectByVisibleText('Precio (Alto - Bajo)')
+        await sortDropdown.selectByAttribute('value', 'price,desc')
 
         // 3. Then
         const products = await $$('[data-test="product-name"]')
