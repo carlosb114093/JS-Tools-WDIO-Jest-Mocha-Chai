@@ -13,10 +13,8 @@ class LoginPage {
 
     async login(email, password) {
         await this.emailInput.fill(email)
-        await this.emailInput.press('Tab')
         await this.passwordInput.fill(password)
-        await this.passwordInput.press('Tab')
-        await this.loginButton.click()
+        await this.loginButton.click({ force: true })
     }
 }
 

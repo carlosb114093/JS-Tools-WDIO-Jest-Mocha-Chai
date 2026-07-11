@@ -1,8 +1,9 @@
 const { test, expect } = require('@playwright/test')
 const LoginPage = require('../pages/LoginPage')
+const { TEST_EMAIL, TEST_PASSWORD } = require('./credentials')
 
 const credentials = [
-    { email: 'testuser3@epam.com', password: 'T3st12345@' },
+    { email: TEST_EMAIL, password: TEST_PASSWORD },
 ]
 
 test.describe('@signup_signin - Registered user signs in with valid credentials', () => {

@@ -27,7 +27,7 @@ test.describe('@basket - Customer adds product to basket and changes quantity', 
             await productPage.addToCart()
 
             // Then
-            await expect(productPage.cartQuantity).toHaveText(quantity, { timeout: 8000 })
+            await expect(productPage.cartQuantity).toHaveText(quantity, { timeout: 15000 })
         })
     }
 

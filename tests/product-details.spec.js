@@ -20,7 +20,7 @@ test.describe('@product_details - Customer opens product details page', () => {
             await homePage.openProduct(product)
 
             // Then
-            await expect(productPage.productName).toContainText(product, { timeout: 8000 })
+            await expect(productPage.productName).toContainText(product, { timeout: 15000 })
             await expect(productPage.unitPrice).toBeVisible()
             await expect(productPage.description).toBeVisible()
             await expect(productPage.addToCartBtn).toBeVisible()

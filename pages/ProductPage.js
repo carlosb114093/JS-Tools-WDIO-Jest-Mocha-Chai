@@ -11,6 +11,7 @@ class ProductPage {
     }
 
     async setQuantity(quantity) {
+        await this.quantityInput.waitFor({ state: 'visible', timeout: 20000 })
         await this.quantityInput.fill(quantity)
     }
 

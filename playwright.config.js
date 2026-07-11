@@ -6,13 +6,15 @@ module.exports = defineConfig({
     fullyParallel: false,
     forbidOnly: !!process.env.CI,
     retries: 2,
-    workers: 2,
+    workers: 1,
     reporter: 'list',
     use: {
         baseURL: 'https://practicesoftwaretesting.com',
         headless: false,
         screenshot: 'only-on-failure',
         trace: 'on-first-retry',
+        actionTimeout: 15000,
+        navigationTimeout: 30000,
     },
     projects: [
         {

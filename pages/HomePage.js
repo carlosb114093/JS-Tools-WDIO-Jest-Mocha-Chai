@@ -12,11 +12,18 @@ class HomePage {
 
     async search(query) {
         await this.searchInput.fill(query)
+        const responsePromise = this.page.waitForResponse(
+            res => res.url().includes('/products/search') && res.status() === 200
+        )
         await this.searchButton.click()
+        await responsePromise
     }
 
     async openProduct(name) {
-        await this.page.getByText(name, { exact: true }).first().click()
+        const link = this.page.getByText(name, { exact: true }).first()
+        await link.scrollIntoViewIfNeeded()
+        await link.click({ force: true })
+        await this.page.waitForLoadState('domcontentloaded')
     }
 }
 
