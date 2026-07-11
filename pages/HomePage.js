@@ -11,18 +11,18 @@ class HomePage {
     }
 
     async search(query) {
-        await this.searchInput.fill(query)
         const responsePromise = this.page.waitForResponse(
-            res => res.url().includes('/products/search') && res.status() === 200
+            res => res.url().includes('/products/search') && res.ok(),
+            { timeout: 30000 }
         )
+        await this.searchInput.fill(query)
         await this.searchButton.click()
         await responsePromise
     }
 
     async openProduct(name) {
-        const link = this.page.getByText(name, { exact: true }).first()
-        await link.scrollIntoViewIfNeeded()
-        await link.click({ force: true })
+        const link = this.page.locator('[data-test="product-name"]', { hasText: name }).first()
+        await link.click()
         await this.page.waitForLoadState('domcontentloaded')
     }
 }

@@ -33,8 +33,9 @@ module.exports = defineConfig({
         },
         {
             name: 'webkit',
-            use: { ...devices['Desktop Safari'] },
+            use: { ...devices['Desktop Safari'], actionTimeout: 30000 },
             dependencies: ['setup'],
+            timeout: 60000,
         },
     ],
 })

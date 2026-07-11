@@ -14,7 +14,13 @@ class LoginPage {
     async login(email, password) {
         await this.emailInput.fill(email)
         await this.passwordInput.fill(password)
-        await this.loginButton.click({ force: true })
+        await Promise.all([
+            this.page.waitForResponse(
+                res => res.request().method() === 'POST' && res.url().includes('login') && res.ok(),
+                { timeout: 30000 }
+            ),
+            this.loginButton.click(),
+        ])
     }
 }
 

@@ -16,7 +16,8 @@ class ProductPage {
     }
 
     async addToCart() {
-        await this.addToCartBtn.click({ force: true })
+        await this.addToCartBtn.click()
+        await this.cartQuantity.waitFor({ state: 'visible', timeout: 20000 })
     }
 }
 
