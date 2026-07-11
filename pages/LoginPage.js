@@ -8,7 +8,9 @@ class LoginPage {
     }
 
     async goto() {
-        await this.page.goto('/auth/login')
+        // domcontentloaded (no 'load') para no agotar el goto por recursos lentos en WebKit
+        await this.page.goto('/auth/login', { waitUntil: 'domcontentloaded' })
+        await this.emailInput.waitFor({ state: 'visible', timeout: 30000 })
     }
 
     async login(email, password) {

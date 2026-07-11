@@ -8,6 +8,7 @@ module.exports = defineConfig({
     retries: 2,
     workers: 1,
     reporter: 'list',
+    expect: { timeout: 10000 },
     use: {
         baseURL: 'https://practicesoftwaretesting.com',
         headless: false,

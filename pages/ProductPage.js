@@ -1,3 +1,5 @@
+const { expect } = require('@playwright/test')
+
 class ProductPage {
     constructor(page) {
         this.page             = page
@@ -16,8 +18,13 @@ class ProductPage {
     }
 
     async addToCart() {
-        await this.addToCartBtn.click()
-        await this.cartQuantity.waitFor({ state: 'visible', timeout: 20000 })
+        // Reintento: en WebKit el primer click a veces cae antes de que Angular
+        // enganche el handler (pagina visible pero no interactiva) y se pierde.
+        // Si el badge no aparece, se vuelve a clickear hasta que aparezca.
+        await expect(async () => {
+            await this.addToCartBtn.click()
+            await this.cartQuantity.waitFor({ state: 'visible', timeout: 5000 })
+        }).toPass({ timeout: 30000 })
     }
 }
 
