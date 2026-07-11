@@ -1,3 +1,5 @@
+const { expect } = require('@playwright/test')
+
 class HomePage {
     constructor(page) {
         this.page         = page
@@ -11,13 +13,10 @@ class HomePage {
     }
 
     async search(query) {
-        const responsePromise = this.page.waitForResponse(
-            res => res.url().includes('/products/search') && res.ok(),
-            { timeout: 30000 }
-        )
         await this.searchInput.fill(query)
         await this.searchButton.click()
-        await responsePromise
+        // Espera a que la grilla se re-renderice con el resultado (evita leer la lista anterior)
+        await expect(this.productNames.first()).toContainText(query, { timeout: 15000 })
     }
 
     async openProduct(name) {
