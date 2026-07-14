@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "wdio": "wdio run ./wdio.conf.js"
+    "wdio": "wdio run ./wdio.conf.js",
+    "test:chrome": "cypress run --browser chrome --headless",
+    "test:firefox": "cypress run --browser firefox --headless",
+    "test:edge": "cypress run --browser edge --headless",
+    "test:all": "npm run test:chrome && npm run test:firefox && npm run test:edge"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +18,8 @@
     "@wdio/cli": "^9.29.1",
     "@wdio/local-runner": "^9.29.1",
     "@wdio/mocha-framework": "^9.29.1",
-    "@wdio/spec-reporter": "^9.29.1"
+    "@wdio/spec-reporter": "^9.29.1",
+    "cypress": "^15.18.1"
   },
   "dependencies": {
     "chai": "^4.3.10"
