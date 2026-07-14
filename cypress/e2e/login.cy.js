@@ -1,17 +1,21 @@
+const registerPage = require('../support/pages/register.page')
 const loginPage = require('../support/pages/login.page')
 const navBar = require('../support/pages/nav.component')
-const { registerUser } = require('../support/api')
-const { users } = require('../support/test-users')
+const { buildUser } = require('../support/test-users')
 
 // @signup_signin
 // Scenario Outline: Registered customer logs in with valid credentials
 describe('Sign in - registered customer logs in with valid credentials', () => {
-  const examples = [users.customer, users.customer2]
+  const examples = [
+    { firstName: 'John', lastName: 'Smith' },
+    { firstName: 'Jane', lastName: 'Miller' },
+  ]
 
-  examples.forEach((user) => {
-    it(`logs in successfully with ${user.email}`, () => {
-      // Given the customer owns an account (precondición vía API)
-      registerUser(user)
+  examples.forEach((data) => {
+    it(`logs in successfully as ${data.firstName} ${data.lastName}`, () => {
+      // Given the customer owns an account (registrado a través de la UI)
+      const user = buildUser(data)
+      registerPage.registerUser(user)
 
       // Given the customer is on the sign-in page
       loginPage.visit()

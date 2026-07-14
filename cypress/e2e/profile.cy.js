@@ -1,7 +1,7 @@
+const registerPage = require('../support/pages/register.page')
 const loginPage = require('../support/pages/login.page')
 const profilePage = require('../support/pages/profile.page')
-const { registerUser } = require('../support/api')
-const { users } = require('../support/test-users')
+const { buildUser } = require('../support/test-users')
 
 // @user_profile
 // Scenario Outline: Customer edits their profile information
@@ -13,9 +13,11 @@ describe('My profile - customer edits their profile information', () => {
 
   beforeEach(() => {
     // Given the customer is logged in and on the "My profile" page
-    registerUser(users.profileEditor)
+    // (cuenta nueva registrada a través de la UI en cada test)
+    const user = buildUser({ firstName: 'Peter', lastName: 'Editor' })
+    registerPage.registerUser(user)
     loginPage.visit()
-    loginPage.login(users.profileEditor.email, users.profileEditor.password)
+    loginPage.login(user.email, user.password)
     cy.url().should('include', '/account')
     profilePage.visit()
   })
