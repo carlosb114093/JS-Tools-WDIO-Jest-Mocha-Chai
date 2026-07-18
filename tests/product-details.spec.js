@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test')
-const HomePage = require('../pages/HomePage')
-const ProductPage = require('../pages/ProductPage')
+const HomePage = require('../business/pages/HomePage')
+const ProductPage = require('../business/pages/ProductPage')
 
 const products = ['Combination Pliers', 'Claw Hammer']
 
@@ -13,7 +13,7 @@ test.describe('@product_details - Customer opens product details page', () => {
 
     for (const product of products) {
         test(`loads details for [${product}]`, async ({ page }) => {
-            const homePage   = new HomePage(page)
+            const homePage    = new HomePage(page)
             const productPage = new ProductPage(page)
 
             // When

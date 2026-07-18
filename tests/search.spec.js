@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test')
-const HomePage = require('../pages/HomePage')
+const HomePage = require('../business/pages/HomePage')
 
 const queries = ['Combination Pliers', 'Slip Joint Pliers']
 
@@ -17,7 +17,7 @@ test.describe('@search - Customer searches for exact product name', () => {
             // When
             await homePage.search(query)
 
-            // Then - verify first result matches the search query
+            // Then
             await expect(homePage.productNames.first()).toBeVisible({ timeout: 8000 })
             await expect(homePage.productNames.first()).toContainText(query, { timeout: 8000 })
         })

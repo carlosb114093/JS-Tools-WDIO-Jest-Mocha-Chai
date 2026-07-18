@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test')
-const LoginPage = require('../pages/LoginPage')
+const LoginPage = require('../business/pages/LoginPage')
 const { TEST_EMAIL, TEST_PASSWORD } = require('./credentials')
 
 const credentials = [
@@ -15,7 +15,6 @@ test.describe('@signup_signin - Registered user signs in with valid credentials'
 
     for (const { email, password } of credentials) {
         test(`signs in with [${email}]`, async ({ page }) => {
-            // Use test.only on a single test to run only that one during debugging
             const loginPage = new LoginPage(page)
 
             // When

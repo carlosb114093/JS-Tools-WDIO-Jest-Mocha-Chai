@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test')
-const HomePage = require('../pages/HomePage')
-const ProductPage = require('../pages/ProductPage')
+const HomePage = require('../business/pages/HomePage')
+const ProductPage = require('../business/pages/ProductPage')
 
 const cases = [
     { product: 'Combination Pliers', quantity: '3' },
