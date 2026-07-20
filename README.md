@@ -84,3 +84,9 @@ All specs that depend on authentication reuse this saved session — no manual a
 - Tests run sequentially (`workers: 1`) to avoid resource contention between browsers
 - `actionTimeout: 15000ms` and `navigationTimeout: 30000ms` to accommodate slower browsers
 - `retries: 2` handles occasional network flakiness on Firefox and WebKit
+
+## Layered architecture (Module 6)
+
+- **Core layer** (`core/`): framework-agnostic wrappers — `BasePage` (browser interactions) and `ApiHelper` (API requests)
+- **Business layer** (`business/pages/`): page objects with business logic, extending `BasePage`
+- **Tests layer** (`tests/`): specs and auth setup; they only use the business layer API
