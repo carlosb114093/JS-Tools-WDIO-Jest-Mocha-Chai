@@ -1,4 +1,3 @@
-const { expect } = require('@playwright/test')
 const BasePage = require('../../core/BasePage')
 
 class ProductPage extends BasePage {
@@ -13,18 +12,23 @@ class ProductPage extends BasePage {
         this.cartQuantity      = page.locator('[data-test="cart-quantity"]')
     }
 
+    async waitForLoaded() {
+        // Los detalles del producto llegan por API; en Firefox/WebKit pueden tardar.
+        await this.waitForVisible(this.addToCartBtn, 30000)
+    }
+
     async setQuantity(quantity) {
         await this.waitForVisible(this.quantityInput, 20000)
         await this.fill(this.quantityInput, quantity)
     }
 
     async addToCart() {
-        // WebKit: Angular may not have attached the click handler yet on first render.
-        // Retry until the cart badge appears.
-        await expect(async () => {
+        // WebKit: Angular puede no tener el click handler enganchado en el primer render.
+        // Se reintenta hasta que el badge del carrito aparezca.
+        await this.retry(async () => {
             await this.click(this.addToCartBtn)
-            await this.cartQuantity.waitFor({ state: 'visible', timeout: 5000 })
-        }).toPass({ timeout: 30000 })
+            await this.waitForVisible(this.cartQuantity, 5000)
+        })
     }
 }
 

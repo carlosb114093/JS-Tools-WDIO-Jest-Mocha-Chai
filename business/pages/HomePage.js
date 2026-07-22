@@ -1,5 +1,5 @@
-const { expect } = require('@playwright/test')
 const BasePage = require('../../core/BasePage')
+const ProductPage = require('./ProductPage')
 
 class HomePage extends BasePage {
     constructor(page) {
@@ -16,21 +16,23 @@ class HomePage extends BasePage {
     }
 
     async search(query) {
-        // WebKit: Angular puede no tener el binding del input listo aún;
+        // WebKit: Angular puede no tener el binding del input listo aun;
         // si la busqueda no dispara la peticion, se reintenta el ciclo completo.
-        await expect(async () => {
+        await this.retry(async () => {
             await this.fill(this.searchInput, query)
             const responsePromise = this.waitForResponse('/products/search', 5000)
             await this.click(this.searchButton)
             await responsePromise
-        }).toPass({ timeout: 30000 })
+        })
         await this.expectText(this.productNames.first(), query)
     }
 
     async openProduct(name) {
         const link = this.page.locator('[data-test="product-name"]', { hasText: name }).first()
         await this.click(link)
-        await this.waitForVisible(this.page.locator('[data-test="add-to-cart"]'), 30000)
+        const productPage = new ProductPage(this.page)
+        await productPage.waitForLoaded()
+        return productPage
     }
 }
 

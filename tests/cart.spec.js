@@ -1,6 +1,5 @@
 const { test, expect } = require('@playwright/test')
 const HomePage = require('../business/pages/HomePage')
-const ProductPage = require('../business/pages/ProductPage')
 
 const cases = [
     { product: 'Combination Pliers', quantity: '3' },
@@ -16,11 +15,10 @@ test.describe('@basket - Customer adds product to basket and changes quantity', 
 
     for (const { product, quantity } of cases) {
         test(`adds [${product}] with quantity ${quantity}`, async ({ page }) => {
-            const homePage    = new HomePage(page)
-            const productPage = new ProductPage(page)
+            const homePage = new HomePage(page)
 
             // Given
-            await homePage.openProduct(product)
+            const productPage = await homePage.openProduct(product)
 
             // When
             await productPage.setQuantity(quantity)

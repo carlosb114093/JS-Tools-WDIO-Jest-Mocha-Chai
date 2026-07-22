@@ -28,6 +28,10 @@ class BasePage {
         )
     }
 
+    async retry(action, timeout = 30000) {
+        await expect(action).toPass({ timeout })
+    }
+
     async expectText(locator, text, timeout = 15000) {
         await expect(locator).toContainText(text, { timeout })
     }

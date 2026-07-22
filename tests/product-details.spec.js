@@ -1,6 +1,5 @@
 const { test, expect } = require('@playwright/test')
 const HomePage = require('../business/pages/HomePage')
-const ProductPage = require('../business/pages/ProductPage')
 
 const products = ['Combination Pliers', 'Claw Hammer']
 
@@ -13,11 +12,10 @@ test.describe('@product_details - Customer opens product details page', () => {
 
     for (const product of products) {
         test(`loads details for [${product}]`, async ({ page }) => {
-            const homePage    = new HomePage(page)
-            const productPage = new ProductPage(page)
+            const homePage = new HomePage(page)
 
             // When
-            await homePage.openProduct(product)
+            const productPage = await homePage.openProduct(product)
 
             // Then
             await expect(productPage.productName).toContainText(product, { timeout: 15000 })
