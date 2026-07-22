@@ -16,10 +16,14 @@ class HomePage extends BasePage {
     }
 
     async search(query) {
-        await this.fill(this.searchInput, query)
-        const responsePromise = this.waitForResponse('/products/search')
-        await this.click(this.searchButton)
-        await responsePromise
+        // WebKit: Angular puede no tener el binding del input listo aún;
+        // si la busqueda no dispara la peticion, se reintenta el ciclo completo.
+        await expect(async () => {
+            await this.fill(this.searchInput, query)
+            const responsePromise = this.waitForResponse('/products/search', 5000)
+            await this.click(this.searchButton)
+            await responsePromise
+        }).toPass({ timeout: 30000 })
         await this.expectText(this.productNames.first(), query)
     }
 
