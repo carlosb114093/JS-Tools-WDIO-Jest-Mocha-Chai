@@ -14,10 +14,8 @@ test.describe('@search - Customer searches for exact product name', () => {
         test(`search results match [${query}]`, async ({ page }) => {
             const homePage = new HomePage(page)
 
-            // When
             await homePage.search(query)
 
-            // Then
             await expect(homePage.productNames.first()).toBeVisible({ timeout: 8000 })
             await expect(homePage.productNames.first()).toContainText(query, { timeout: 8000 })
         })

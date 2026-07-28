@@ -14,10 +14,8 @@ test.describe('@product_details - Customer opens product details page', () => {
         test(`loads details for [${product}]`, async ({ page }) => {
             const homePage = new HomePage(page)
 
-            // When
             const productPage = await homePage.openProduct(product)
 
-            // Then
             await expect(productPage.productName).toContainText(product, { timeout: 15000 })
             await expect(productPage.unitPrice).toBeVisible()
             await expect(productPage.description).toBeVisible()

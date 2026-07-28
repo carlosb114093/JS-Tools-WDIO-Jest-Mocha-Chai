@@ -17,14 +17,11 @@ test.describe('@basket - Customer adds product to basket and changes quantity', 
         test(`adds [${product}] with quantity ${quantity}`, async ({ page }) => {
             const homePage = new HomePage(page)
 
-            // Given
             const productPage = await homePage.openProduct(product)
 
-            // When
             await productPage.setQuantity(quantity)
             await productPage.addToCart()
 
-            // Then
             await expect(productPage.cartQuantity).toHaveText(quantity, { timeout: 15000 })
         })
     }

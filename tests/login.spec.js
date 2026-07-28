@@ -17,10 +17,8 @@ test.describe('@signup_signin - Registered user signs in with valid credentials'
         test(`signs in with [${email}]`, async ({ page }) => {
             const loginPage = new LoginPage(page)
 
-            // When
             await loginPage.login(email, password)
 
-            // Then
             await expect(page).toHaveURL(/\/account/, { timeout: 12000 })
             await expect(loginPage.navMenu).not.toBeEmpty()
         })
