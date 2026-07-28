@@ -1,6 +1,14 @@
 # Playwright Test Automation Framework
 
-Automated E2E test suite for [Practice Software Testing (Toolshop)](https://practicesoftwaretesting.com) using Playwright with multi-browser support.
+Automated E2E test suite for [Practice Software Testing (Toolshop)](https://practicesoftwaretesting.com) using Playwright with multi-browser support (Chromium, Firefox, WebKit).
+
+## Architecture
+
+Layered architecture (Core / Business / Tests) following Page Object Model pattern and SOLID principles:
+
+- **Core layer** (`core/`): Framework-agnostic wrappers — `BasePage` (browser interactions) and `ApiHelper` (API requests)
+- **Business layer** (`business/pages/`): Page objects with application-specific logic, extending `BasePage`
+- **Tests layer** (`tests/`): Test specs, authentication setup, and TAF configuration
 
 ## Tech Stack
 
@@ -34,40 +42,56 @@ npx playwright install
 
 ## Run tests
 
-### Run all tests (Chromium + Firefox + WebKit)
+### All browsers (Chromium + Firefox + WebKit)
 ```powershell
-npx playwright test --config=tests/playwright.config.js
+npm test
 ```
 
-### Run a single spec
+### Single browser
 ```powershell
-npx playwright test --config=tests/playwright.config.js tests/login.spec.js
+npm run test:chromium
+npm run test:firefox
+npm run test:webkit
 ```
 
-### Run on a specific browser
+### Single test file
 ```powershell
-npx playwright test --config=tests/playwright.config.js --project=chromium
-npx playwright test --config=tests/playwright.config.js --project=firefox
-npx playwright test --config=tests/playwright.config.js --project=webkit
+npm test -- tests/login.spec.js
+```
+
+### With headed browser (for debugging)
+```powershell
+npx playwright test --headed
+```
+
+### View test report
+```powershell
+npm run report
 ```
 
 ## Project structure
 
 ```
 mi-proyecto-playwright/
-├── pages/
-│   ├── HomePage.js          # Home page object
-│   ├── LoginPage.js         # Login page object
-│   └── ProductPage.js       # Product detail page object
+├── core/
+│   ├── BasePage.js              # Browser interaction wrappers (navigate, click, fill, retry)
+│   └── ApiHelper.js             # API request wrapper
+├── business/
+│   └── pages/
+│       ├── HomePage.js          # Home page object (search, openProduct)
+│       ├── LoginPage.js         # Login page object (login, goto)
+│       └── ProductPage.js       # Product page object (setQuantity, addToCart)
 ├── tests/
-│   ├── auth.setup.js        # Global auth setup (register + login, saves state)
-│   ├── credentials.js       # Shared test credentials
+│   ├── playwright.config.js     # TAF configuration (browsers, retries, timeouts)
+│   ├── auth.setup.js            # Global auth setup (register + login via API, saves state)
+│   ├── credentials.js           # Shared test user credentials
 │   ├── cart.spec.js
 │   ├── login.spec.js
 │   ├── product-details.spec.js
 │   └── search.spec.js
-├── playwright.config.js
-└── LESSONS_LEARNED.md
+├── package.json
+├── .gitignore
+└── README.md
 ```
 
 ## Authentication
@@ -77,16 +101,11 @@ The `auth.setup.js` file runs once before all specs:
 2. Logs in via the UI
 3. Saves the session state to `state.json`
 
-All specs that depend on authentication reuse this saved session — no manual account creation needed.
+All specs that depend on authentication reuse this saved session.
 
-## Cross-browser notes
+## Cross-browser configuration
 
-- Tests run sequentially (`workers: 1`) to avoid resource contention between browsers
-- `actionTimeout: 15000ms` and `navigationTimeout: 30000ms` to accommodate slower browsers
-- `retries: 2` handles occasional network flakiness on Firefox and WebKit
-
-## Layered architecture (Module 6)
-
-- **Core layer** (`core/`): framework-agnostic wrappers — `BasePage` (browser interactions) and `ApiHelper` (API requests)
-- **Business layer** (`business/pages/`): page objects with business logic, extending `BasePage`
-- **Tests layer** (`tests/`): specs and auth setup; they only use the business layer API
+- Tests run with `workers: 2` for parallel execution across browsers
+- `actionTimeout: 15000ms` and `navigationTimeout: 30000ms` accommodate slower browsers
+- `retries: 2` handles occasional network flakiness
+- WebKit-specific retry logic in `HomePage.search()` and `ProductPage.addToCart()` handles Angular binding races
