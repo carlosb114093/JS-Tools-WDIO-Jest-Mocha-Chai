@@ -11,7 +11,7 @@ module.exports = defineConfig({
     expect: { timeout: 10000 },
     use: {
         baseURL: 'https://practicesoftwaretesting.com',
-        headless: false,
+        headless: true,
         screenshot: 'only-on-failure',
         trace: 'on-first-retry',
         actionTimeout: 15000,
