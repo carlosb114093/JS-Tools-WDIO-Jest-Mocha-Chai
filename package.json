@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Playwright test automation framework with layered architecture (Core/Business/Tests)",
   "scripts": {
-    "test": "playwright test",
-    "test:chromium": "playwright test --project=chromium",
-    "test:firefox": "playwright test --project=firefox",
-    "test:webkit": "playwright test --project=webkit",
+    "test": "playwright test --config=tests/playwright.config.js",
+    "test:chromium": "playwright test --config=tests/playwright.config.js --project=chromium",
+    "test:firefox": "playwright test --config=tests/playwright.config.js --project=firefox",
+    "test:webkit": "playwright test --config=tests/playwright.config.js --project=webkit",
     "report": "playwright show-report"
   },
   "license": "ISC",

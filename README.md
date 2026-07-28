@@ -36,19 +36,19 @@ npx playwright install
 
 ### Run all tests (Chromium + Firefox + WebKit)
 ```powershell
-npx playwright test
+npx playwright test --config=tests/playwright.config.js
 ```
 
 ### Run a single spec
 ```powershell
-npx playwright test tests/login.spec.js
+npx playwright test --config=tests/playwright.config.js tests/login.spec.js
 ```
 
 ### Run on a specific browser
 ```powershell
-npx playwright test --project=chromium
-npx playwright test --project=firefox
-npx playwright test --project=webkit
+npx playwright test --config=tests/playwright.config.js --project=chromium
+npx playwright test --config=tests/playwright.config.js --project=firefox
+npx playwright test --config=tests/playwright.config.js --project=webkit
 ```
 
 ## Project structure
