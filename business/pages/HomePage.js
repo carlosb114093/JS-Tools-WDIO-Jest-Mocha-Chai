@@ -24,7 +24,6 @@ class HomePage extends BasePage {
             await this.click(this.searchButton)
             await responsePromise
         })
-        await this.expectText(this.productNames.first(), query)
     }
 
     async openProduct(name) {

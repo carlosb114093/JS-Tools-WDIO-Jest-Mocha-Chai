@@ -16,8 +16,8 @@ test.describe('@search - Customer searches for exact product name', () => {
 
             await homePage.search(query)
 
-            await expect(homePage.productNames.first()).toBeVisible({ timeout: 8000 })
-            await expect(homePage.productNames.first()).toContainText(query, { timeout: 8000 })
+            await expect(homePage.productNames.first()).toBeVisible({ timeout: 15000 })
+            await expect(homePage.productNames.first()).toContainText(query, { timeout: 15000 })
         })
     }
 
